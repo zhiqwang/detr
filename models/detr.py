@@ -44,7 +44,7 @@ class DETR(nn.Module):
 
     def forward(self, samples_list: List[Tensor]):
         """ The forward expects a List of Tensor:
-               - samples_list: batched images, of shape [batch_size x 3 x H x W]
+               - samples_list: a list of Tensor, with elements of shape [3 x H x W]
 
             It returns a dict with the following elements:
                - "pred_logits": the classification logits (including no-object) for all queries.
