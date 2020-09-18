@@ -34,9 +34,8 @@ class DETRsegm(nn.Module):
         self.bbox_attention = MHAttentionMap(hidden_dim, hidden_dim, nheads, dropout=0.0)
         self.mask_head = MaskHeadSmallConv(hidden_dim + nheads, [1024, 512, 256], hidden_dim)
 
-    def forward(self, samples: NestedTensor):
-        if isinstance(samples, (list, torch.Tensor)):
-            samples = nested_tensor_from_tensor_list(samples)
+    def forward(self, samples: List[Tensor]):
+        samples = nested_tensor_from_tensor_list(samples)
         features, pos = self.detr.backbone(samples)
 
         bs = features[-1].tensors.shape[0]
