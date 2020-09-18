@@ -4,7 +4,8 @@ DETR model and criterion classes.
 """
 import torch
 import torch.nn.functional as F
-from torch import nn
+from torch import nn, Tensor
+from typing import List
 
 from util import box_ops
 from util.misc import (NestedTensor, nested_tensor_from_tensor_list,
@@ -41,10 +42,9 @@ class DETR(nn.Module):
         self.backbone = backbone
         self.aux_loss = aux_loss
 
-    def forward(self, samples: NestedTensor):
-        """ The forward expects a NestedTensor, which consists of:
-               - samples.tensor: batched images, of shape [batch_size x 3 x H x W]
-               - samples.mask: a binary mask of shape [batch_size x H x W], containing 1 on padded pixels
+    def forward(self, samples_list: List[Tensor]):
+        """ The forward expects a List of Tensor:
+               - samples_list: batched images, of shape [batch_size x 3 x H x W]
 
             It returns a dict with the following elements:
                - "pred_logits": the classification logits (including no-object) for all queries.
@@ -56,8 +56,7 @@ class DETR(nn.Module):
                - "aux_outputs": Optional, only returned when auxilary losses are activated. It is a list of
                                 dictionnaries containing the two above keys for each decoder layer.
         """
-        if isinstance(samples, (list, torch.Tensor)):
-            samples = nested_tensor_from_tensor_list(samples)
+        samples = nested_tensor_from_tensor_list(samples_list)
         features, pos = self.backbone(samples)
 
         src, mask = features[-1].decompose()

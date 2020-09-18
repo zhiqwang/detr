@@ -69,18 +69,18 @@ class Tester(unittest.TestCase):
     def test_model_script_detection(self):
         model = detr_resnet50(pretrained=False).eval()
         scripted_model = torch.jit.script(model)
-        x = nested_tensor_from_tensor_list([torch.rand(3, 200, 200), torch.rand(3, 200, 250)])
-        out = model(x)
-        out_script = scripted_model(x)
+        input_list = [torch.rand(3, 200, 200), torch.rand(3, 200, 250)]
+        out = model(input_list)
+        out_script = scripted_model(input_list)
         self.assertTrue(out["pred_logits"].equal(out_script["pred_logits"]))
         self.assertTrue(out["pred_boxes"].equal(out_script["pred_boxes"]))
 
     def test_model_script_panoptic(self):
         model = detr_resnet50_panoptic(pretrained=False).eval()
         scripted_model = torch.jit.script(model)
-        x = nested_tensor_from_tensor_list([torch.rand(3, 200, 200), torch.rand(3, 200, 250)])
-        out = model(x)
-        out_script = scripted_model(x)
+        input_list = [torch.rand(3, 200, 200), torch.rand(3, 200, 250)]
+        out = model(input_list)
+        out_script = scripted_model(input_list)
         self.assertTrue(out["pred_logits"].equal(out_script["pred_logits"]))
         self.assertTrue(out["pred_boxes"].equal(out_script["pred_boxes"]))
         self.assertTrue(out["pred_masks"].equal(out_script["pred_masks"]))
@@ -88,12 +88,8 @@ class Tester(unittest.TestCase):
     def test_model_detection_different_inputs(self):
         model = detr_resnet50(pretrained=False).eval()
         # support NestedTensor
-        x = nested_tensor_from_tensor_list([torch.rand(3, 200, 200), torch.rand(3, 200, 250)])
-        out = model(x)
-        self.assertIn('pred_logits', out)
-        # and 4d Tensor
-        x = torch.rand(1, 3, 200, 200)
-        out = model(x)
+        input_list = [torch.rand(3, 200, 200), torch.rand(3, 200, 250)]
+        out = model(input_list)
         self.assertIn('pred_logits', out)
         # and List[Tensor[C, H, W]]
         x = torch.rand(3, 200, 200)
