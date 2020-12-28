@@ -5,6 +5,7 @@
 .DS_Store
 .*.swp
 *.pth
+*.pt
 **/__pycache__/**
 .ipynb_checkpoints/
 datasets/data/
@@ -15,3 +16,4 @@ experiment-*
 .mypy_cache/*
 not_tracked_dir/
 .vscode
+build
