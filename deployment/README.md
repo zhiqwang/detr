@@ -35,8 +35,8 @@ A LibTorch inference implementation of detr. Both GPU and CPU are supported.
 
     ```bash
     git clone https://github.com/zhiqwang/detr.git
+    cd detr
     git checkout deployment
-    cd yolov5-rt-stack
     python -m deployment.trace_model
     ```
 
